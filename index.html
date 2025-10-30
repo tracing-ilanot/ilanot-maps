@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ilanot Provenance Maps</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header>
+            <h1>Ilanot Provenance Maps</h1>
+            <p class="subtitle">Interactive visualizations the provenance of Ilanot manuscripts</p>
+        </header>
+        
+        <main>
+            <section class="intro">
+                <p>
+                    This site hosts an experimental collection of interactive maps 
+                    generated from manuscript data. Each map corresponds to a 
+                    specific Ilanot record.
+                </p>
+            </section>
+            
+            <section class="map-list">
+                <h2>Available Maps</h2>
+                <ul id="map-list">
+                    <!-- The script below automatically lists all map pages -->
+                </ul>
+            </section>
+        </main>
+        
+        <footer>
+            <p>© 2025 Maximilian de Molière — <a href="https://github.com/tracing-ilanot/ilanot-maps" target="_blank">GitHub Repository</a></p>
+        </footer>
+        
+        <script>
+    // Automatically generate links for map pages 001–508
+    const list = document.getElementById('map-list');
+    for (let i = 1; i <= 508; i++) {
+      const num = String(i).padStart(3, '0');
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `maps/map-${num}.html`;
+      a.textContent = `Map ${num}`;
+      li.appendChild(a);
+      list.appendChild(li);
+    }
+  </script>
+    </body>
+</html>

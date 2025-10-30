@@ -1,0 +1,200 @@
+<!DOCTYPE HTML>
+<html lang="en">
+   <head>
+      <title>Manuscript Journey — Interactive Map</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+      <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+      <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+      <style>
+                :root{
+                --bg:#fafafa;
+                --text:#111;
+                --muted:#555;
+                --border:#e6e6e6;
+                --shadow:0 6px 20px rgba(0,0,0,.08);
+                --accent:#0b66c3;
+                }
+                *{box-sizing:border-box}
+                html,body{height:100%}
+                body{
+                margin:0;
+                font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+                color:var(--text);
+                background:var(--bg);
+                }
+                #map{width:100%; height:100vh}
+                .filter-control{background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:10px;display:flex;flex-direction:column;gap:10px;min-width:260px}
+                .section{display:flex;flex-direction:column;gap:8px}
+                .section-title{font-weight:700;font-size:14px;margin:2px 2px 0 2px}
+                .chip{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;border:1px solid var(--border);background:#fff;cursor:pointer;user-select:none;outline:none;transition:transform .1s ease,box-shadow .15s ease,background .2s ease,border-color .2s ease;font-size:13px}
+                .chip[data-active="true"]{box-shadow:0 2px 10px rgba(0,0,0,.08);border-color:currentColor;background:rgba(0,0,0,.02)}
+                .chip:focus-visible{box-shadow:0 0 0 3px rgba(31,119,180,.25)}
+                .chip-bullet{width:12px;height:12px;border-radius:999px;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.2);flex:0 0 auto}
+                .controls-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+                .btn{height:34px;display:inline-flex;align-items:center;justify-content:center;padding:0 12px;border-radius:10px;border:1px solid var(--border);background:#fff;cursor:pointer;transition:box-shadow .15s ease,transform .1s ease;font-size:13px}
+                .btn:hover{box-shadow:0 2px 10px rgba(0,0,0,.08)}
+                .btn:active{transform:translateY(1px)}
+                
+                /* Marker appearance */
+                .marker-dot{
+                --size:16px;
+                width:var(--size);
+                height:var(--size);
+                border-radius:999px;
+                background:var(--dot-color,#333);
+                border:2.5px solid #fff;
+                box-shadow:0 0 0 1px rgba(0,0,0,.25), 0 1px 6px rgba(0,0,0,.25);
+                position: relative;
+                display: grid;
+                place-items: center;
+                font: 700 11px/1 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+                color: #fff;
+                text-shadow: 0 1px 2px rgba(0,0,0,.5);
+                }
+                .marker-dot.pie{
+                --size:24px; /* 150% of 16px */
+                background: conic-gradient(var(--dot-color) 0 100%); /* default fallback */
+                }
+                .marker-count{
+                position: absolute;
+                inset: 0;
+                display: grid;
+                place-items: center;
+                pointer-events: none;
+                user-select: none;
+                }
+                
+                /* Popup content */
+                .popup{font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;min-width:260px;max-width:360px}
+                .ev-title{font-weight:700;margin:0 0 4px}
+                .ev-meta{margin:0;color:#333}
+                .note{margin-top:6px;color:#222}
+                .note button{border:none;background:none;color:var(--accent);cursor:pointer;padding:0;font:inherit}
+                .pager{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+                .pager .count{font-variant-numeric:tabular-nums;color:var(--muted)}
+                .icon-btn{border:1px solid var(--border);background:#fff;border-radius:8px;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+                .icon-btn:disabled{opacity:.5;cursor:not-allowed}
+                .icon{width:16px;height:16px;display:inline-block}
+                .leaflet-top.leaflet-left .filter-control{margin:12px}
+                @media (max-width:520px){.filter-control{min-width:220px}}
+            </style>
+   </head>
+   <body>
+      <div id="map"></div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script><script type="text/javascript">
+            
+            const events = [{"id":"event-452-99","type":"last-known-owner","date":"2001/2100","title":"The last known holder is the Beth Din and Beth Hamidrash Library, London.","place":"London","actor":"","org":"Beth Din and Beth Hamidrash Library","lat":51.5074,"lon":-0.1278}];
+            
+          </script><script type="text/javascript">
+            
+const TYPES = Array.from(new Set(events.map(e=>e.type)));
+const typeColors = {}; (function(){const palette=["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf","#8dd3c7","#fb8072"];TYPES.forEach((t,i)=>{typeColors[t]=palette[i%palette.length]||`hsl(${Math.round((360/Math.max(1,TYPES.length))*i)} 65% 45%)`;});})();
+
+function isFiniteNum(v){const n=Number(v);return Number.isFinite(n);} 
+function escapeHTML(s){return String(s).replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]||m)).replace(/'/g,'&#39;');}
+function fmtDate(val){if(!val)return'';const s=String(val).trim();const m1=s.match(/^(\\d{4})(?:[/-]\\d{2}(?:[/-]\\d{2})?)?$/);if(m1)return m1[1];const m2=s.match(/^(\\d{4})(?:[/-]\\d{2}(?:[/-]\\d{2})?)?[/-](\\d{4})(?:[/-]\\d{2}(?:[/-]\\d{2})?)?$/);if(m2)return `${m2[1]}–${m2[2]}`;return escapeHTML(val);}
+function toTitle(str){return String(str).split(/[-_ ]+/).filter(Boolean).map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' ');}
+
+const state={selectedTypes:new Set(),group:null,markersByKey:new Map()};
+const map=L.map('map');L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+function newClusterGroup(){return L.markerClusterGroup({showCoverageOnHover:false,spiderfyOnMaxZoom:true,maxClusterRadius:60,chunkedLoading:true});}
+state.group=newClusterGroup();map.addLayer(state.group);
+
+// Filters (same as before but omitted here for brevity? No, include.)
+const FilterControl=L.Control.extend({options:{position:'topleft'},onAdd:function(map){const d=L.DomUtil.create('div','filter-control');d.setAttribute('role','group');d.setAttribute('aria-label','Filters');const s=document.createElement('div');s.className='section';const title=document.createElement('div');title.className='section-title';title.textContent='Event Types';s.appendChild(title);TYPES.forEach(tp=>{const b=document.createElement('button');b.className='chip';b.type='button';b.setAttribute('role','switch');b.setAttribute('aria-checked','false');b.dataset.type=tp;b.dataset.active='false';b.style.color=typeColors[tp];b.innerHTML=`<span class="chip-bullet" style="background:${typeColors[tp]}"></span><span>${toTitle(tp)}</span>`;b.addEventListener('click',()=>toggleType(tp,b));b.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();toggleType(tp,b);}});s.appendChild(b);});const row=document.createElement('div');row.className='controls-row';const reset=document.createElement('button');reset.className='btn';reset.textContent='Reset';reset.addEventListener('click',()=>{state.selectedTypes.clear();d.querySelectorAll('.chip').forEach(ch=>{ch.dataset.active='false';ch.setAttribute('aria-checked','false');});renderMarkers(true);});row.appendChild(reset);s.appendChild(row);d.appendChild(s);L.DomEvent.disableClickPropagation(d);L.DomEvent.disableScrollPropagation(d);return d;}});
+map.addControl(new FilterControl());
+
+function filteredEvents(){const base=state.selectedTypes.size?events.filter(e=>state.selectedTypes.has(e.type)):events.slice();return base.filter(e=>isFiniteNum(e.lat)&&isFiniteNum(e.lon));}
+function coordKey(lat,lon){return `${(+lat).toFixed(4)},${(+lon).toFixed(4)}`;}
+function groupByCoords(rows){const m=new Map();rows.forEach(ev=>{const k=coordKey(ev.lat,ev.lon);if(!m.has(k))m.set(k,[]);m.get(k).push(ev);});for(const [k,arr] of m){arr.sort((a,b)=>String(a.date||'').localeCompare(String(b.date||'')));}return m;}
+
+// Popup pagination
+window._popupStore={};function makePopupId(){return'p'+Math.random().toString(36).slice(2);}
+function buildPagedPopupShell(pid,total){return`<div class="popup" data-popup-id="${pid}"><div class="pager"><button class="icon-btn" aria-label="Previous event" onclick="_gotoPopupPage('${pid}',-1)">&#9664;</button><div class="count"><span id="${pid}-idx">1</span> / <span id="${pid}-total">${total}</span></div><button class="icon-btn" aria-label="Next event" onclick="_gotoPopupPage('${pid}',+1)">&#9654;</button></div><div id="${pid}-content"></div></div>`;}
+function renderPopupPage(pid,idx){const st=window._popupStore[pid];if(!st)return;const i=Math.min(Math.max(idx,0),st.items.length-1);st.index=i;const e=st.items[i];const c=document.getElementById(`${pid}-content`);if(!c)return;let fields='';const d=fmtDate(e.date);if(d)fields+=`<strong>Date:</strong> ${d}<br/>`;if(e.type)fields+=`<strong>Type:</strong> ${escapeHTML(e.type)}<br/>`;if(e.place)fields+=`<strong>Place:</strong> ${escapeHTML(e.place)}<br/>`;if(e.actor)fields+=`<strong>Actor:</strong> ${escapeHTML(e.actor)}<br/>`;c.innerHTML=`<h3 class="ev-title">${escapeHTML(e.title||'')}</h3><p class="ev-meta">${fields}</p>${e.notes?'<div class="note">'+escapeHTML(e.notes)+'</div>':''}`;const idxEl=document.getElementById(`${pid}-idx`);if(idxEl)idxEl.textContent=String(i+1);}
+window._gotoPopupPage=function(pid,d){const st=window._popupStore[pid];if(!st)return;renderPopupPage(pid,st.index+d);};
+function buildPopupContent(arr){if(arr.length===1)return`<div class="popup">${singleEventInnerHTML(arr[0])}</div>`;const id=makePopupId();window._popupStore[id]={items:arr.slice(),index:0};return buildPagedPopupShell(id,arr.length);}
+function singleEventInnerHTML(e){let fields='';const d=fmtDate(e.date);if(d)fields+=`<strong>Date:</strong> ${d}<br/>`;if(e.type)fields+=`<strong>Type:</strong> ${escapeHTML(e.type)}<br/>`;if(e.place)fields+=`<strong>Place:</strong> ${escapeHTML(e.place)}<br/>`;if(e.actor)fields+=`<strong>Actor:</strong> ${escapeHTML(e.actor)}<br/>`;return `<h3 class="ev-title">${escapeHTML(e.title||'')}</h3><p class="ev-meta">${fields}</p>${e.notes?'<div class="note">'+escapeHTML(e.notes)+'</div>':''}`;}
+
+// Build gradient for multi-type pie
+function pieGradient(arr){ 
+  // Count by type
+  const counts = new Map();
+  arr.forEach(e=>{ counts.set(e.type, (counts.get(e.type)||0)+1); });
+  const total = arr.length;
+  let acc = 0;
+  const stops = [];
+  for(const [type, cnt] of counts){
+    const color = typeColors[type] || '#666';
+    const start = (acc/total)*100;
+    acc += cnt;
+    const end = (acc/total)*100;
+    stops.push(`${color} ${start}% ${end}%`);
+  }
+  return `conic-gradient(${stops.join(', ')})`;
+}
+
+function renderMarkers(fit=false){
+  state.group.clearLayers();state.markersByKey.clear();
+  const rows=filteredEvents();const grouped=groupByCoords(rows);
+  grouped.forEach((arr,k)=>{
+    const latest=arr.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')))[0];
+    const [lat,lon]=k.split(',').map(Number);
+
+    let iconHtml, iconSize, iconAnchor, popupAnchor;
+    if(arr.length > 1){
+      const bg = pieGradient(arr);
+      iconHtml = `<div class="marker-dot pie" style="background:${bg}">
+        <span class="marker-count" aria-hidden="true">${arr.length}</span>
+      </div>`;
+      iconSize = [30,30]; // ~24px dot + borders
+      iconAnchor = [15,15];
+      popupAnchor = [0,-14];
+    } else {
+      const color=typeColors[latest.type] || '#666';
+      iconHtml = `<div class="marker-dot" style="--dot-color:${color}"></div>`;
+      iconSize = [18,18];
+      iconAnchor = [9,9];
+      popupAnchor = [0,-9];
+    }
+    const icon=L.divIcon({html:iconHtml,className:'marker',iconSize,iconAnchor,popupAnchor});
+    const m=L.marker([lat,lon],{ icon, keyboard:true, alt: `${arr.length} event${arr.length>1?'s':''} at this location` });
+    m.bindPopup(buildPopupContent(arr), { className:'popup', closeButton:true });
+
+    m.on('popupopen', (ev)=>{
+      const root = ev.popup.getElement();
+      if(!root) return;
+      const pop = root.querySelector('.popup');
+      if(!pop) return;
+      const pid = pop.getAttribute('data-popup-id');
+      if(pid && window._popupStore[pid]){
+        renderPopupPage(pid, window._popupStore[pid].index || 0);
+        root.addEventListener('keydown', function(e){
+          if(e.key === 'ArrowLeft'){ e.preventDefault(); window._gotoPopupPage(pid,-1); }
+          if(e.key === 'ArrowRight'){ e.preventDefault(); window._gotoPopupPage(pid,+1); }
+          if(e.key === 'Escape'){ map.closePopup(); }
+        });
+      }
+    });
+
+    state.group.addLayer(m); state.markersByKey.set(k,m);
+  });
+  if(fit) fitToCurrent();
+}
+
+function fitToCurrent(){
+  if(state.group.getLayers().length===0){ map.setView([20,0],3); return; }
+  const b=state.group.getBounds(); if(!b || (b.getNorthEast().equals(b.getSouthWest()))){ map.setView(b?b.getCenter():[20,0],6); }
+  else { map.fitBounds(b.pad(0.12)); }
+}
+
+function toggleType(t,ch){
+  if(state.selectedTypes.has(t)){ state.selectedTypes.delete(t); ch.dataset.active='false'; ch.setAttribute('aria-checked','false'); }
+  else { state.selectedTypes.add(t); ch.dataset.active='true'; ch.setAttribute('aria-checked','true'); }
+  renderMarkers(true);
+}
+
+renderMarkers(true);
+            
+          </script></body>
+</html>
