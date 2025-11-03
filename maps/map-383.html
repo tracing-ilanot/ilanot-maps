@@ -83,7 +83,7 @@
    <body>
       <div id="map"></div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script><script type="text/javascript">
             
-            const events = [{"id":"event-383-01","type":"manuscript-production","date":"1701 to 1800","title":"Created in Yemen in the 18th to 19th centuries.","place":"Yemen","actor":"","lat":15.5,"lon":47.5},{"id":"event-383-99","type":"last-known-owner","date":"2001 to 2100","title":"The last known holder is the Manfred and Anne Lehmann Foundation, New York.","place":"New York","actor":"Manfred and Anne Lehmann Foundation (owner)","lat":40.7128,"lon":-74.006}];
+            const events = [{"id":"event-383-01","type":"manuscript-production","date":"1701 to 1800","title":"Created in the 18th to 19th centuries, maybe in Yemen.","place":"Yemen","actor":"","lat":15.5,"lon":47.5},{"id":"event-383-99","type":"last-known-owner","date":"2001 to 2100","title":"The last known holder is the Manfred and Anne Lehmann Foundation, New York.","place":"New York","actor":"Manfred and Anne Lehmann Foundation (owner)","lat":40.7128,"lon":-74.006}];
             
           </script><script type="text/javascript">
             
@@ -96,7 +96,12 @@ function fmtDate(val){if(!val)return'';const s=String(val).trim();const m1=s.mat
 function toTitle(str){return String(str).split(/[-_ ]+/).filter(Boolean).map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' ');}
 
 const state={selectedTypes:new Set(),group:null,markersByKey:new Map()};
-const map=L.map('map');L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+const map=L.map('map');L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+	attribution: '© Mapbox © OpenStreetMap',
+	minZoom: 0,
+	maxZoom: 22,
+	accessToken: 'pk.eyJ1IjoibWF4bW9saWVyZSIsImEiOiJjbHViZmxsZHUwNjN0MmtwM3U3MmdvNWl5In0.w8EqjpuQzeu2ucnLLWdonA'
+}).addTo(map);
 function newClusterGroup(){return L.markerClusterGroup({showCoverageOnHover:false,spiderfyOnMaxZoom:true,maxClusterRadius:60,chunkedLoading:true});}
 state.group=newClusterGroup();map.addLayer(state.group);
 

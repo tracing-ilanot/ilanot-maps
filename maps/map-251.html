@@ -83,7 +83,7 @@
    <body>
       <div id="map"></div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script><script type="text/javascript">
             
-            const events = [{"id":"event-251-01","type":"manuscript-production","date":"1896","title":"Created in 1896 in Eastern Europe by Judah Leib ben Asher Anshel Katz.","place":"Eastern Europe","actor":"Judah Leib ben Asher Anshel Katz (scribe)","lat":50,"lon":30},{"id":"event-251-02","type":"previous-owner","date":"","title":"This ilan was owned by the Gross Family Collection Trust.","place":"Tel Aviv","actor":"The Gross Family Collection Trust","lat":32.0853,"lon":34.7818},{"id":"event-251-99","type":"last-known-owner","date":"2001 to 2100","title":"The last known holder is the National Library of Israel, Jerusalem.","place":"Jerusalem","actor":"National Library of Israel (owner)","lat":31.7683,"lon":35.2137}];
+            const events = [{"id":"event-251-01","type":"manuscript-production","date":"1876","title":"Created in 1876 in Central Europe by Judah Leib ben Asher Anshel Katz.","place":"Eastern Europe","actor":"Judah Leib ben Asher Anshel Katz (scribe)","lat":50,"lon":30},{"id":"event-251-02","type":"previous-owner","date":"","title":"This ilan was owned by the Gross Family Collection Trust.","place":"Tel Aviv","actor":"The Gross Family Collection Trust (owner)","lat":32.0853,"lon":34.7818},{"id":"event-251-99","type":"last-known-owner","date":"2001 to 2100","title":"The last known holder is the National Library of Israel, Jerusalem.","place":"Jerusalem","actor":"National Library of Israel (owner)","lat":31.7683,"lon":35.2137}];
             
           </script><script type="text/javascript">
             
@@ -96,7 +96,12 @@ function fmtDate(val){if(!val)return'';const s=String(val).trim();const m1=s.mat
 function toTitle(str){return String(str).split(/[-_ ]+/).filter(Boolean).map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' ');}
 
 const state={selectedTypes:new Set(),group:null,markersByKey:new Map()};
-const map=L.map('map');L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+const map=L.map('map');L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+	attribution: '© Mapbox © OpenStreetMap',
+	minZoom: 0,
+	maxZoom: 22,
+	accessToken: 'pk.eyJ1IjoibWF4bW9saWVyZSIsImEiOiJjbHViZmxsZHUwNjN0MmtwM3U3MmdvNWl5In0.w8EqjpuQzeu2ucnLLWdonA'
+}).addTo(map);
 function newClusterGroup(){return L.markerClusterGroup({showCoverageOnHover:false,spiderfyOnMaxZoom:true,maxClusterRadius:60,chunkedLoading:true});}
 state.group=newClusterGroup();map.addLayer(state.group);
 
