@@ -96,7 +96,7 @@ function fmtDate(val){if(!val)return'';const s=String(val).trim();const m1=s.mat
 function toTitle(str){return String(str).split(/[-_ ]+/).filter(Boolean).map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' ');}
 
 const state={selectedTypes:new Set(),group:null,markersByKey:new Map()};
-const map=L.map('map');L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+const map=L.map('map');L.tileLayer('https://api.mapbox.com/styles/v1/maxmoliere/cmhivsv2l000301qr5z5l3evg/tiles/{z}/{x}/{y}?access_token={accessToken}', {
 	attribution: '© Mapbox © OpenStreetMap',
 	minZoom: 0,
 	maxZoom: 22,
