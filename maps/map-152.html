@@ -24,7 +24,7 @@
                 background:var(--bg);
                 }
                 #map{width:100%; height:100vh}
-                .filter-control{background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:10px;display:flex;flex-direction:column;gap:10px;min-width:260px}
+                .filter-control{background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:10px;display:flex;flex-direction:column;gap:10px;min-width:200px}
                 .section{display:flex;flex-direction:column;gap:8px}
                 .section-title{font-weight:700;font-size:14px;margin:2px 2px 0 2px}
                 .chip{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;border:1px solid var(--border);background:#fff;cursor:pointer;user-select:none;outline:none;transition:transform .1s ease,box-shadow .15s ease,background .2s ease,border-color .2s ease;font-size:13px}
@@ -77,13 +77,13 @@
                 .icon-btn:disabled{opacity:.5;cursor:not-allowed}
                 .icon{width:16px;height:16px;display:inline-block}
                 .leaflet-top.leaflet-left .filter-control{margin:12px}
-                @media (max-width:520px){.filter-control{min-width:220px}}
+                @media (max-width:520px){.filter-control{min-width:180px}}
             </style>
    </head>
    <body>
       <div id="map"></div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script><script type="text/javascript">
             
-            const events = [{"id":"event-152-01","type":"manuscript-production","date":"1601 to 1700","title":"Created in the 17th century in Italy.","place":"Italy","actor":"","lat":42.83333,"lon":12.83333},{"id":"event-152-99","type":"last-known-owner","date":"2001 to 2100","title":"The last known holder is the Jewish Theological Seminary Library, New York.","place":"New York","actor":"Jewish Theological Seminary Library (owner)","lat":40.7128,"lon":-74.006}];
+            const events = [{"id":"event-152-01","type":"manuscript-production","date":"1601 to 1700","title":"Created in the 17th century in Italy.","place":"Italy","actor":"","lat":42.83333,"lon":12.83333}];
             
           </script><script type="text/javascript">
             
